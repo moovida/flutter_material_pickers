@@ -8,12 +8,18 @@ import 'package:flutter/material.dart';
 
 /// Allows selection of a file.
 Future<void> showMaterialFilePicker({
-  BuildContext context,
+  BuildContext? context,
+
+  /// The type of the file to retrieve (filter)
   FileType fileType = FileType.any,
-  List<String> allowedExtensions,
-  ValueChanged<PlatformFile> onChanged,
+
+  /// What allowed extensions to look for
+  List<String>? allowedExtensions,
+
+  /// Function that gets called when the value is changed
+  ValueChanged<PlatformFile>? onChanged,
 }) async {
-  FilePickerResult result = await FilePicker.platform.pickFiles(
+  FilePickerResult? result = await FilePicker.platform.pickFiles(
     type: fileType,
     withData: true,
     allowMultiple: false,

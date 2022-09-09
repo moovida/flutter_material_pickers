@@ -4,17 +4,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/pickers/scroll_picker.dart';
 
-import 'responsive_dialog.dart';
+import '../flutter_material_pickers.dart';
 import '../interfaces/common_dialog_properties.dart';
+import 'responsive_dialog.dart';
 
 /// This is a support widget that returns an Dialog with checkboxes as a Widget.
 /// It is designed to be used in the showDialog method of other fields.
-class ScrollPickerDialog extends StatefulWidget
+class ScrollPickerDialog<T> extends StatefulWidget
     implements ICommonDialogProperties {
   ScrollPickerDialog({
     this.title,
-    this.items,
-    this.initialItem,
+    required this.items,
+    required this.selectedItem,
+    this.transformer,
     this.headerColor,
     this.headerTextColor,
     this.backgroundColor,
@@ -27,43 +29,42 @@ class ScrollPickerDialog extends StatefulWidget
   });
 
   // Variables
-  final List<String> items;
-  final String initialItem;
+  final List<T> items;
+  final T? selectedItem;
+  final Transformer<T>? transformer;
   @override
-  final String title;
+  final String? title;
   @override
-  final Color headerColor;
+  final Color? headerColor;
   @override
-  final Color headerTextColor;
+  final Color? headerTextColor;
   @override
-  final Color backgroundColor;
+  final Color? backgroundColor;
   @override
-  final Color buttonTextColor;
+  final Color? buttonTextColor;
   @override
-  final double maxLongSide;
+  final double? maxLongSide;
   @override
-  final double maxShortSide;
+  final double? maxShortSide;
   @override
-  final String confirmText;
+  final String? confirmText;
   @override
-  final String cancelText;
+  final String? cancelText;
 
   final bool showDivider;
 
   @override
   State<ScrollPickerDialog> createState() =>
-      _ScrollPickerDialogState(initialItem);
+      _ScrollPickerDialogState<T>(selectedItem ?? items[0]);
 }
 
-class _ScrollPickerDialogState extends State<ScrollPickerDialog> {
+class _ScrollPickerDialogState<T> extends State<ScrollPickerDialog<T>> {
   _ScrollPickerDialogState(this.selectedItem);
 
-  String selectedItem;
+  T selectedItem;
 
   @override
   Widget build(BuildContext context) {
-    assert(context != null);
-
     return ResponsiveDialog(
       context: context,
       title: widget.title,
@@ -75,11 +76,12 @@ class _ScrollPickerDialogState extends State<ScrollPickerDialog> {
       maxShortSide: widget.maxLongSide,
       confirmText: widget.confirmText,
       cancelText: widget.cancelText,
-      child: ScrollPicker(
+      child: ScrollPicker<T>(
         items: widget.items,
-        initialValue: selectedItem,
+        selectedItem: selectedItem,
         showDivider: widget.showDivider,
         onChanged: (value) => setState(() => selectedItem = value),
+        transformer: widget.transformer,
       ),
       okPressed: () => Navigator.of(context).pop(selectedItem),
     );

@@ -2,47 +2,51 @@
 // is governed by the MIT license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
+import '../flutter_material_pickers.dart';
 
 /// This helper widget manages the scrollable content inside a picker widget.
-class ScrollPicker extends StatefulWidget {
+class ScrollPicker<T> extends StatefulWidget {
   ScrollPicker({
-    Key key,
-    @required this.items,
-    @required this.initialValue,
-    @required this.onChanged,
+    Key? key,
+    required this.items,
+    required this.selectedItem,
+    required this.onChanged,
     this.showDivider: true,
-  })  : assert(items != null),
-        super(key: key);
+    this.transformer,
+  }) : super(key: key);
 
   // Events
-  final ValueChanged<String> onChanged;
+  final ValueChanged<T> onChanged;
 
   // Variables
-  final List<String> items;
-  final String initialValue;
+  final List<T> items;
+  final T selectedItem;
   final bool showDivider;
 
+  // Callbacks
+  final Transformer<T>? transformer;
+
   @override
-  _ScrollPickerState createState() => _ScrollPickerState(initialValue);
+  _ScrollPickerState createState() => _ScrollPickerState<T>(selectedItem);
 }
 
-class _ScrollPickerState extends State<ScrollPicker> {
+class _ScrollPickerState<T> extends State<ScrollPicker<T>> {
   _ScrollPickerState(this.selectedValue);
 
   // Constants
   static const double itemHeight = 50.0;
 
   // Variables
-  double widgetHeight;
-  int numberOfVisibleItems;
-  int numberOfPaddingRows;
-  double visibleItemsHeight;
-  double offset;
+  late double widgetHeight;
+  late int numberOfVisibleItems;
+  late int numberOfPaddingRows;
+  late double visibleItemsHeight;
+  late double offset;
 
-  String selectedValue;
+  T selectedValue;
 
-  ScrollController scrollController;
+  late ScrollController scrollController;
 
   @override
   void initState() {
@@ -55,9 +59,9 @@ class _ScrollPickerState extends State<ScrollPicker> {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    TextStyle defaultStyle = themeData.textTheme.bodyText2;
-    TextStyle selectedStyle =
-        themeData.textTheme.headline5.copyWith(color: themeData.accentColor);
+    TextStyle? defaultStyle = themeData.textTheme.bodyText2;
+    TextStyle? selectedStyle = themeData.textTheme.headline5
+        ?.copyWith(color: themeData.colorScheme.secondary);
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -76,11 +80,12 @@ class _ScrollPickerState extends State<ScrollPicker> {
 
                   var value = widget.items[index];
 
-                  final TextStyle itemStyle =
+                  final TextStyle? itemStyle =
                       (value == selectedValue) ? selectedStyle : defaultStyle;
 
                   return Center(
-                    child: Text(value, style: itemStyle),
+                    child: Text(widget.transformer?.call(value) ?? '$value',
+                        style: itemStyle),
                   );
                 }),
                 controller: scrollController,
@@ -95,9 +100,10 @@ class _ScrollPickerState extends State<ScrollPicker> {
                 height: itemHeight,
                 decoration: BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: themeData.accentColor, width: 1.0),
-                    bottom:
-                        BorderSide(color: themeData.accentColor, width: 1.0),
+                    top: BorderSide(
+                        color: themeData.colorScheme.secondary, width: 1.0),
+                    bottom: BorderSide(
+                        color: themeData.colorScheme.secondary, width: 1.0),
                   ),
                 ),
               ),
@@ -120,7 +126,7 @@ class _ScrollPickerState extends State<ScrollPicker> {
   }
 
   void _onSelectedItemChanged(int index) {
-    String newValue = widget.items[index];
+    T newValue = widget.items[index];
     if (newValue != selectedValue) {
       selectedValue = newValue;
       widget.onChanged(newValue);

@@ -1,5 +1,72 @@
 # Releases
 
+## [3.1.4+1] - 2022-04-08
+
+- formatting
+
+## [3.1.4] - 2022-04-08
+
+- added example back in
+- improved documentation
+
+## [3.1.3] - 2022-04-07
+
+- Updated dependency versions
+
+## [3.1.2] - 2021-09-29
+
+- Updated `flutter_colorpicker` version
+- replaces `theme.accentColor` with `theme.colorScheme.secondary`
+
+## [3.1.1] - 2021-08-04
+
+- Fixing `transformer` method not being called on `showMaterialScrollPicker`
+
+## [3.1.0] - 2021-06-11
+
+- provided a standard `PickerModel` that can be used with all picker type controls
+
+## [3.0.0] - 2021-06-10
+
+There are some **breaking changes** in 3.0.0 (from 2.1.1).
+
+- Pickers accept generic types passed to pickers and helpers.
+- There's no need to pass several lists (items, values, icons), just pass
+  one list of generic type objects.
+- A selected item of generic type is passed as `selectedItem` not
+  `selectedValue` to match name of `items`.
+- To convert an item to a string displayed to a user either override
+  toString() in generic type class or pass transformer callback which
+  accepts an item and returns a String. (see examples)
+- To provide item's icon in SelectionPicker (and alikes), pass iconizer
+  callback which accepts an item and returns an Icon. (see example)
+
+## [2.1.1] - 2021-4-13
+
+- Fixed item not showing on scroll picker [thanks elliotrtd]
+
+## [2.1.0] - 2021-4-12
+
+- Added an optional `values` list to `showMaterialSelectionPicker`, `showMaterialCheckboxPicker`, `showMaterialRadioPicker`, and `showMaterialScrollPicker`. This allows separate display names and returned values. Can be used for consistent localization scenarios. Note: This is a minor breakign change. The field `selectedItem` was changed to `selectedValue`.
+
+## [2.0.1] - 2021-03-22
+
+- allow null initial value for RadioPicker
+- allow null initial value for CheckBoxPicker
+- allow null initial value for NumberRicker
+- upgraded to null save colorpicker
+
+## [2.0.0] - 2021-03-12
+
+- Bumped SDK restriction from 2.7.0 to 2.12.0 (new minimum).
+- Removed the meta package dependency since the @required annotation has been replaced and is not needed for named parameters anymore.
+- Added the required modifier to any required parameters in widgets and/or functions.
+- Changed the types of any optional named parameters to be nullable (ex. from String to String?).
+- Removed unnecessary not null asserts for required parameters as package users cannot send nullable values for these anymore.
+- Replaced the DynamicTheme dependency with the actively maintained AdaptiveTheme in order to make sure the package supports sound null safety and is not in mixed mode (ie. depends on packages with no null safety).
+- Replaced deprecated widget FlatButton with the replacement ElevatedButton where applicable (no changes to api surface of the package were made).
+- changed the datePicker dialog to use the ResponsiveDialog so it behaves like the other widgets
+
 ## [1.9.2] - 2021-02-08
 
 - added support for `intl` nullsafety.2

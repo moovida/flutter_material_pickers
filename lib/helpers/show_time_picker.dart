@@ -4,20 +4,42 @@
 import 'package:flutter/material.dart';
 
 /// Allows selection of a time
-void showMaterialTimePicker({
-  BuildContext context,
-  String title,
-  TimeOfDay selectedTime,
-  ValueChanged<TimeOfDay> onChanged,
-  VoidCallback onConfirmed,
-  VoidCallback onCancelled,
+Future<TimeOfDay?> showMaterialTimePicker({
+  required BuildContext context,
+
+  /// The title for the dialog box
+  String? title,
+
+  /// The initially selected time
+  required TimeOfDay selectedTime,
+
+  /// Text to display in the confirm button
+  String? confirmText,
+
+  /// Text to display in the cancel button
+  String? cancelText,
+
+  /// Function that gets called when the value is changed
+  ValueChanged<TimeOfDay>? onChanged,
+
+  /// Function that gets called when the confirm button is pressed
+  VoidCallback? onConfirmed,
+
+  /// Function that gets called when the cancel button is pressed
+  VoidCallback? onCancelled,
 }) {
-  showTimePicker(
+  return showTimePicker(
     context: context,
     initialTime: selectedTime,
+    cancelText: cancelText,
+    confirmText: confirmText,
   ).then((selection) {
-    if (onChanged != null && selection != null) onChanged(selection);
-    if (onCancelled != null && selection == null) onCancelled();
-    if (onConfirmed != null && selection != null) onConfirmed();
+    if (selection != null) {
+      onChanged?.call(selection);
+      onConfirmed?.call();
+    } else {
+      onCancelled?.call();
+    }
+    return selection;
   });
 }

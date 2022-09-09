@@ -6,23 +6,49 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_material_pickers/dialogs/responsive_dialog.dart';
 
 /// Allows Material palette selection of a color
-void showMaterialPalettePicker({
-  BuildContext context,
+Future<Color?> showMaterialPalettePicker({
+  required BuildContext context,
+
+  /// The title for the dialog box
   String title = "Pick a color",
-  Color selectedColor,
-  Color headerColor,
-  Color headerTextColor,
-  Color backgroundColor,
-  Color buttonTextColor,
-  String confirmText,
-  String cancelText,
-  double maxLongSide,
-  double maxShortSide,
-  ValueChanged<Color> onChanged,
-  VoidCallback onConfirmed,
-  VoidCallback onCancelled,
+
+  /// The color that is initially selected
+  required Color selectedColor,
+
+  /// The dialog header color (overrides theme)
+  Color? headerColor,
+
+  /// The dialog header text color (overrides theme)
+  Color? headerTextColor,
+
+  /// The dialog background color (overrides theme)
+  Color? backgroundColor,
+
+  /// The button text color (overrides theme)
+  Color? buttonTextColor,
+
+  /// Text to display in the confirm button
+  String? confirmText,
+
+  /// Text to display in the cancel button
+  String? cancelText,
+
+  /// Used to restrict how tall the dialog can be.
+  double? maxLongSide,
+
+  /// Used to restrict how wide the dialog can be.
+  double? maxShortSide,
+
+  /// Function that gets called when the value is changed
+  ValueChanged<Color>? onChanged,
+
+  /// Function that gets called when the confirm button is pressed
+  VoidCallback? onConfirmed,
+
+  /// Function that gets called when the cancel button is pressed
+  VoidCallback? onCancelled,
 }) {
-  showDialog<Color>(
+  return showDialog<Color>(
     context: context,
     builder: (BuildContext context) {
       return OrientationBuilder(
@@ -49,8 +75,12 @@ void showMaterialPalettePicker({
       );
     },
   ).then((selection) {
-    if (onChanged != null && selection != null) onChanged(selection);
-    if (onCancelled != null && selection == null) onCancelled();
-    if (onConfirmed != null && selection != null) onConfirmed();
+    if (selection != null) {
+      onChanged?.call(selection);
+      onConfirmed?.call();
+    } else {
+      onCancelled?.call();
+    }
+    return selection;
   });
 }

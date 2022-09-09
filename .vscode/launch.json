@@ -5,11 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Flutter",
+            "name": "flutter_material_pickers example",
+            "cwd": "example",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "flutter_material_pickers example (profile mode)",
+            "cwd": "example",
             "request": "launch",
             "type": "dart",
-            "program": "${workspaceFolder}/example/lib/main.dart",
-            "flutterMode": "debug",
-        }
+            "flutterMode": "profile"
+        } 
     ]
 }

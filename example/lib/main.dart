@@ -1,64 +1,38 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
+// ignore_for_file: avoid_print
+
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:intl/intl.dart';
 
 import 'model.dart';
+import 'theme.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return DynamicTheme(
-      defaultBrightness: Brightness.light,
-      data: _buildTheme,
-      themedWidgetBuilder: (context, theme) {
+    return AdaptiveTheme(
+      initial: AdaptiveThemeMode.light,
+      light: buildTheme(Brightness.light),
+      dark: buildTheme(Brightness.dark),
+      builder: (context, theme) {
         return MaterialApp(
           title: 'Material Picker Examples',
           theme: theme,
-          home: TestPage(),
+          home: const TestPage(),
         );
       },
     );
   }
 }
 
-ThemeData _buildTheme(Brightness brightness) {
-  var theme = ThemeData(
-    primarySwatch: Colors.indigo,
-    brightness: brightness,
-  );
-
-  if (brightness == Brightness.light) {
-    theme = theme.copyWith(
-      primaryColor: Colors.green, // background color of the header area
-      backgroundColor: Colors.green[100], // app background color
-      accentColor:
-          Colors.green[900], // color of selected controls and button bar text
-      dialogBackgroundColor:
-          Colors.green[100], // background color of the entire dialog
-      primaryTextTheme: theme.primaryTextTheme.copyWith(
-        headline6: theme.primaryTextTheme.headline6.copyWith(
-          color: Colors.lightGreen[50], // text color of the header area
-        ),
-      ),
-      textTheme: theme.textTheme.copyWith(
-        bodyText2: theme.textTheme.bodyText2.copyWith(
-          color: Colors.green[700], // text color of dialog text
-        ),
-        button: theme.textTheme.button.copyWith(
-          color: Colors.green[700], // text color of the action bar buttons
-        ),
-      ),
-    );
-  }
-
-  return theme;
-}
-
 class TestPage extends StatefulWidget {
+  const TestPage({Key? key}) : super(key: key);
+
   @override
   _TestPageState createState() => _TestPageState();
 }
@@ -73,46 +47,43 @@ class _TestPageState extends State<TestPage> {
       child: Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          title: Text("Material Picker Examples"),
+          title: const Text('Material Picker Examples'),
           actions: <Widget>[
             IconButton(
               icon: Theme.of(context).brightness == Brightness.dark
-                  ? Icon(Icons.brightness_7)
-                  : Icon(Icons.brightness_4),
-              onPressed: () => DynamicTheme.of(context).setBrightness(
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Brightness.light
-                      : Brightness.dark),
+                  ? const Icon(Icons.brightness_7)
+                  : const Icon(Icons.brightness_4),
+              onPressed: () => AdaptiveTheme.of(context).toggleThemeMode(),
             )
           ],
-          bottom: TabBar(
+          bottom: const TabBar(
             isScrollable: true,
             tabs: <Widget>[
-              Tab(text: "New Pickers"),
-              Tab(text: "Convenience Pickers"),
+              Tab(text: 'New Pickers'),
+              Tab(text: 'Convenience Pickers'),
             ],
           ),
         ),
         body: SafeArea(
           child: Container(
-            margin: EdgeInsets.all(8.0),
+            margin: const EdgeInsets.all(8.0),
             child: TabBarView(
               children: <Widget>[
                 Card(
                   child: Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ListView(
                       children: <Widget>[
                         buildEmptyRow(context),
-                        Divider(),
+                        const Divider(),
                         buildScrollRow(context),
-                        Divider(),
+                        const Divider(),
                         buildNumberRow(context),
-                        Divider(),
+                        const Divider(),
                         buildCheckboxRow(context),
-                        Divider(),
+                        const Divider(),
                         buildRadioRow(context),
-                        Divider(),
+                        const Divider(),
                         buildSelectionRow(context),
                       ],
                     ),
@@ -120,19 +91,19 @@ class _TestPageState extends State<TestPage> {
                 ),
                 Card(
                   child: Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ListView(
                       children: <Widget>[
                         buildTimeRow(context),
-                        Divider(),
+                        const Divider(),
                         buildDateRow(context),
-                        Divider(),
+                        const Divider(),
                         buildColorRow(context),
-                        Divider(),
+                        const Divider(),
                         buildPaletteRow(context),
-                        Divider(),
+                        const Divider(),
                         buildSwatchRow(context),
-                        Divider(),
+                        const Divider(),
                         buildFileRow(context),
                       ],
                     ),
@@ -149,35 +120,35 @@ class _TestPageState extends State<TestPage> {
   Row buildEmptyRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Empty Dialog"),
-            onPressed: () => showMaterialResponsiveDialog(
+          child: ElevatedButton(
+            child: const Text('Empty Dialog'),
+            onPressed: () => showMaterialResponsiveDialog<void>(
               context: context,
               hideButtons: false,
-              confirmText: "Yes",
-              cancelText: "No",
-              onConfirmed: () => print("Dialog confirmed"),
-              onCancelled: () => print("Dialog cancelled"),
+              confirmText: 'Yes',
+              cancelText: 'No',
+              onConfirmed: () => print('Dialog confirmed'),
+              onCancelled: () => print('Dialog cancelled'),
               child: Center(
                 child: Container(
-                  padding: EdgeInsets.all(30.0),
+                  padding: const EdgeInsets.all(30.0),
                   child: RichText(
                     textAlign: TextAlign.center,
-                    text: TextSpan(
+                    text: const TextSpan(
                       text:
-                          "This is the base dialog widget for the pickers. Unlike the off-the-shelf Dialog widget, it handles landscape orientations. You may place any content here you desire.",
+                          'This is the base dialog widget for the pickers. Unlike the off-the-shelf Dialog widget, it handles landscape orientations. You may place any content here you desire.',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.0,
                         fontWeight: FontWeight.w700,
                       ),
                       children: <TextSpan>[
-                        TextSpan(text: "\n\n"),
+                        TextSpan(text: '\n\n'),
                         TextSpan(
                             text:
-                                "This example has the button bar hidden, so you dismiss it by clicking outside the window.",
+                                'This example has the button bar hidden, so you dismiss it by clicking outside the window.',
                             style: TextStyle(
                                 fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.w300)),
@@ -190,9 +161,9 @@ class _TestPageState extends State<TestPage> {
             ),
           ),
         ),
-        Expanded(
+        const Expanded(
           child: Text(
-            "n/a",
+            'n/a',
             textAlign: TextAlign.right,
           ),
         ),
@@ -203,26 +174,26 @@ class _TestPageState extends State<TestPage> {
   Row buildScrollRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Scroll Picker"),
-            onPressed: () => showMaterialScrollPicker(
+          child: ElevatedButton(
+            child: const Text('Scroll Picker'),
+            onPressed: () => showMaterialScrollPicker<PickerModel>(
               context: context,
-              title: "Pick Your City",
+              title: 'Pick Your City',
               showDivider: false,
-              items: model.usStates,
+              items: ExampleModel.usStates,
               selectedItem: model.selectedUsState,
               onChanged: (value) =>
                   setState(() => model.selectedUsState = value),
-              onCancelled: () => print("Scroll Picker cancelled"),
-              onConfirmed: () => print("Scroll Picker confirmed"),
+              onCancelled: () => print('Scroll Picker cancelled'),
+              onConfirmed: () => print('Scroll Picker confirmed'),
             ),
           ),
         ),
         Expanded(
           child: Text(
-            model.selectedUsState.toString(),
+            '${model.selectedUsState} (${model.selectedUsState.code})',
             textAlign: TextAlign.right,
           ),
         ),
@@ -233,18 +204,18 @@ class _TestPageState extends State<TestPage> {
   Row buildNumberRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Number Picker"),
+          child: ElevatedButton(
+            child: const Text('Number Picker'),
             onPressed: () => showMaterialNumberPicker(
               context: context,
-              title: "Pick a Number",
+              title: 'Pick a Number',
               maxNumber: 100,
               minNumber: 15,
               step: 5,
-              confirmText: "Count me in",
-              cancelText: "Negatory",
+              confirmText: 'Count me in',
+              cancelText: 'Negatory',
               selectedNumber: model.age,
               onChanged: (value) => setState(() => model.age = value),
             ),
@@ -263,14 +234,14 @@ class _TestPageState extends State<TestPage> {
   Row buildCheckboxRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Checkbox Picker"),
-            onPressed: () => showMaterialCheckboxPicker(
+          child: ElevatedButton(
+            child: const Text('Checkbox Picker'),
+            onPressed: () => showMaterialCheckboxPicker<PickerModel>(
               context: context,
-              title: "Pick Your Toppings",
-              items: model.iceCreamToppings,
+              title: 'Pick Your Toppings',
+              items: ExampleModel.iceCreamToppings,
               selectedItems: model.selectedIceCreamToppings,
               onChanged: (value) =>
                   setState(() => model.selectedIceCreamToppings = value),
@@ -290,14 +261,14 @@ class _TestPageState extends State<TestPage> {
   Row buildRadioRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Radio Picker"),
-            onPressed: () => showMaterialRadioPicker(
+          child: ElevatedButton(
+            child: const Text('Radio Picker'),
+            onPressed: () => showMaterialRadioPicker<PickerModel>(
               context: context,
-              title: "Pick Your City",
-              items: model.usStates,
+              title: 'Pick Your City',
+              items: ExampleModel.usStates,
               selectedItem: model.selectedUsState,
               onChanged: (value) =>
                   setState(() => model.selectedUsState = value),
@@ -306,7 +277,7 @@ class _TestPageState extends State<TestPage> {
         ),
         Expanded(
           child: Text(
-            model.selectedUsState.toString(),
+            '${model.selectedUsState} (${model.selectedUsState.code})',
             textAlign: TextAlign.right,
           ),
         ),
@@ -317,23 +288,23 @@ class _TestPageState extends State<TestPage> {
   Row buildSelectionRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Selection Picker"),
-            onPressed: () => showMaterialSelectionPicker(
+          child: ElevatedButton(
+            child: const Text('Selection Picker'),
+            onPressed: () => showMaterialSelectionPicker<PickerModel>(
               context: context,
-              title: "Starship Speed",
-              items: model.speedOptions,
+              title: 'Starship Speed',
+              items: ExampleModel.speedOptions,
               selectedItem: model.speed,
-              icons: model.speedIcons,
+              iconizer: (item) => item.icon,
               onChanged: (value) => setState(() => model.speed = value),
             ),
           ),
         ),
         Expanded(
           child: Text(
-            model.speed,
+            '${model.speed} (${model.speed.code})',
             textAlign: TextAlign.right,
           ),
         ),
@@ -344,10 +315,10 @@ class _TestPageState extends State<TestPage> {
   Row buildTimeRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Time Picker"),
+          child: ElevatedButton(
+            child: const Text('Time Picker'),
             onPressed: () => showMaterialTimePicker(
               context: context,
               selectedTime: model.time,
@@ -368,11 +339,14 @@ class _TestPageState extends State<TestPage> {
   Row buildDateRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Date Picker"),
+          child: ElevatedButton(
+            child: const Text('Date Picker'),
             onPressed: () => showMaterialDatePicker(
+              title: 'Pick a date',
+              firstDate: DateTime(1990, 1, 1),
+              lastDate: DateTime(2050, 12, 31),
               context: context,
               selectedDate: model.date,
               onChanged: (value) => setState(() => model.date = value),
@@ -392,10 +366,10 @@ class _TestPageState extends State<TestPage> {
   Row buildColorRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Color Picker"),
+          child: ElevatedButton(
+            child: const Text('Color Picker'),
             onPressed: () => showMaterialColorPicker(
               context: context,
               selectedColor: model.color,
@@ -418,10 +392,10 @@ class _TestPageState extends State<TestPage> {
   Row buildPaletteRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Palette Picker"),
+          child: ElevatedButton(
+            child: const Text('Palette Picker'),
             onPressed: () => showMaterialPalettePicker(
               context: context,
               selectedColor: model.palette,
@@ -444,10 +418,10 @@ class _TestPageState extends State<TestPage> {
   Row buildSwatchRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("Swatch Picker"),
+          child: ElevatedButton(
+            child: const Text('Swatch Picker'),
             onPressed: () => showMaterialSwatchPicker(
               context: context,
               selectedColor: model.swatch,
@@ -470,10 +444,10 @@ class _TestPageState extends State<TestPage> {
   Row buildFileRow(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
+        SizedBox(
           width: 150.0,
-          child: RaisedButton(
-            child: Text("File Picker"),
+          child: ElevatedButton(
+            child: const Text('File Picker'),
             onPressed: () => showMaterialFilePicker(
               context: context,
               fileType: FileType.image,
@@ -483,7 +457,7 @@ class _TestPageState extends State<TestPage> {
         ),
         Expanded(
           child: Text(
-            "${model.file.bytes.lengthInBytes} bytes",
+            '${model.file.bytes?.lengthInBytes} bytes',
             textAlign: TextAlign.right,
           ),
         ),
